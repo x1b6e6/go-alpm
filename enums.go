@@ -90,7 +90,7 @@ const (
 
 // Logging levels.
 const (
-	LogError uint = 1 << iota
+	LogError uint16 = 1 << iota
 	LogWarning
 	LogDebug
 	LogFunction
