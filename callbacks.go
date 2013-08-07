@@ -2,7 +2,6 @@ package alpm
 
 /*
 #include <alpm.h>
-void logCallback(unsigned int level, char *cstring);
 void go_alpm_log_cb(alpm_loglevel_t level, const char *fmt, va_list arg);
 void go_alpm_set_logging(alpm_handle_t *handle);
 */
