@@ -1,3 +1,8 @@
+// enums.go - libaplm enumerations.
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 package alpm
 
 // Install reason of a package.

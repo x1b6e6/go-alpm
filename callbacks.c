@@ -1,3 +1,8 @@
+// callbacks.c - Sets alpm callbacks to Go functions.
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 #include <stdio.h>
 #include <stdarg.h>
 #include <alpm.h>

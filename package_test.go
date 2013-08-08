@@ -1,3 +1,8 @@
+// package_test.go - Tests for package.go
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 package alpm
 
 import (

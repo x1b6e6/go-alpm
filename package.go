@@ -1,3 +1,8 @@
+// package.go - libalpm package type and methods.
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 package alpm
 
 /*

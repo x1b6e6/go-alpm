@@ -1,7 +1,7 @@
 // godefs -g alpm defs.c
-
+//
 // MACHINE GENERATED - DO NOT EDIT.
-
+//
 package alpm
 
 // Constants

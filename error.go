@@ -1,3 +1,8 @@
+// error.go - Functions for converting libalpm erros to Go errors.
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 package alpm
 
 // #include <alpm.h>

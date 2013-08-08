@@ -1,3 +1,8 @@
+// conf.go - Functions for pacman.conf parsing.
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 package alpm
 
 import (
@@ -10,8 +15,6 @@ import (
 	"strings"
 	"syscall"
 )
-
-// Parsing routines for pacman.conf format.
 
 type PacmanOption uint
 

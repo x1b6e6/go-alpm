@@ -1,3 +1,8 @@
+// alpm_test.go - Tests for alpm.go.
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 package alpm
 
 import (
@@ -39,7 +44,6 @@ func ExampleVerCmp() {
 }
 
 func TestRevdeps(t *testing.T) {
-	fmt.Print("Testing reverse deps of glibc...\n")
 	db, _ := h.LocalDb()
 	pkg, _ := db.PkgByName("glibc")
 	for i, pkgname := range pkg.ComputeRequiredBy() {
@@ -58,7 +62,6 @@ func TestLocalDB(t *testing.T) {
 		}
 	}()
 	db, _ := h.LocalDb()
-	fmt.Print("Testing listing local db...\n")
 	number := 0
 	for _, pkg := range db.PkgCache().Slice() {
 		number++
