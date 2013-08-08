@@ -1,10 +1,14 @@
-// +build ignore
-
+//
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 package main
 
-import alpm "github.com/remyoudompheng/go-alpm"
-
-import "fmt"
+import (
+	"alpm"
+	"fmt"
+)
 
 func main() {
 	h, er := alpm.Init("/", "/var/lib/pacman")

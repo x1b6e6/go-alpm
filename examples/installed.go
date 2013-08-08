@@ -1,9 +1,15 @@
+// installed.go - Example of getting a list of installed packages.
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 package main
 
-import alpm "github.com/remyoudompheng/go-alpm"
-
-import "os"
-import "fmt"
+import (
+	"alpm"
+	"os"
+	"fmt"
+)
 
 func main() {
 
