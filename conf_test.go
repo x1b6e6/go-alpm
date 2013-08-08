@@ -2,6 +2,8 @@ package alpm
 
 import (
 	"bytes"
+	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 )
@@ -12,63 +14,61 @@ const pacmanConf = `
 #
 [options]
 RootDir     = /
-DBPath      = /var/lib/pacman/
-CacheDir    = /var/cache/pacman/pkg/ /other/cachedir
+DBPath      = /var/lib/pacman
+CacheDir    = /var/cache/pacman/pkg /other/cachedir
 LogFile     = /var/log/pacman.log
 GPGDir      = /etc/pacman.d/gnupg/
 HoldPkg     = pacman glibc
-# If upgrades are available for these packages they will be asked for first
-SyncFirst   = pacman
 #XferCommand = /usr/bin/curl -C - -f %u > %o
 XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
 CleanMethod = KeepInstalled
-Architecture = x86_64
+UseDelta    = 0.7
+Architecture = auto
 
 # Pacman won't upgrade packages listed in IgnorePkg and members of IgnoreGroup
 IgnorePkg   = hello world
 IgnoreGroup = kde
 
-NoUpgrade   = kernel26
-NoExtract   =
+#NoUpgrade   =
+#NoExtract   =
 
 # Misc options
-UseSyslog
-#UseDelta
-TotalDownload
+#UseSyslog
+Color
+#TotalDownload
 CheckSpace
-#VerbosePkgLists
-ILoveCandy
+VerbosePkgLists
 
-# PGP signature checking
-#SigLevel = Optional
+# By default, pacman accepts packages signed by keys that its local keyring
+# trusts (see pacman-key and its man page), as well as unsigned packages.
+SigLevel    = Required DatabaseOptional
+LocalFileSigLevel = Optional
+#RemoteFileSigLevel = Required
 
 [core]
-SigLevel = Required
 Server = ftp://ftp.example.com/foobar/$repo/os/$arch/
 
 [custom]
-SigLevel = Optional TrustAll
 Server = file:///home/custompkgs
 `
 
 var pacmanConfRef = PacmanConfig{
-	CacheDir:    []string{"/var/cache/pacman/pkg/", "/other/cachedir"},
-	HoldPkg:     []string{"pacman", "glibc"},
-	SyncFirst:   []string{"pacman"},
-	IgnorePkg:   []string{"hello", "world"},
-	IgnoreGroup: []string{"kde"},
-	NoUpgrade:   []string{"kernel26"},
-	NoExtract:   nil,
-
 	RootDir:      "/",
-	DBPath:       "/var/lib/pacman/",
-	GPGDir:       "/etc/pacman.d/gnupg/",
+	DBPath:       "/var/lib/pacman",
+	CacheDir:     []string{"/var/cache/pacman/pkg", "/other/cachedir"},
 	LogFile:      "/var/log/pacman.log",
-	Architecture: "x86_64",
+	GPGDir:       "/etc/pacman.d/gnupg/",
+	HoldPkg:      []string{"pacman", "glibc"},
 	XferCommand:  "/usr/bin/wget --passive-ftp -c -O %o %u",
+	Architecture: "auto",
 	CleanMethod:  "KeepInstalled",
+	UseDelta:     "0.7",
+	IgnorePkg:    []string{"hello", "world"},
+	IgnoreGroup:  []string{"kde"},
+	NoUpgrade:    nil,
+	NoExtract:    nil,
 
-	Options: ConfUseSyslog | ConfTotalDownload | ConfCheckSpace | ConfILoveCandy,
+	Options: ConfColor | ConfCheckSpace | ConfVerbosePkgLists,
 
 	Repos: []RepoConfig{
 		{Name: "core", Servers: []string{"ftp://ftp.example.com/foobar/$repo/os/$arch/"}},
@@ -100,5 +100,27 @@ func TestPacmanConfigParser(t *testing.T) {
 		t.Error(err)
 	}
 
+	detailedDeepEqual(t, conf, pacmanConfRef)
+}
+
+func TestPacmanConfigParserFile(t *testing.T) {
+	tf, err := ioutil.TempFile("/tmp", "alpm_test")
+	if err != nil {
+		t.Error(err)
+	}
+	name := tf.Name()
+	_, err = tf.Write([]byte(pacmanConf))
+	if err != nil {
+		t.Error(err)
+	}
+	tf.Close()
+	f, err := os.Open(name)
+	if err != nil {
+		t.Error(err)
+	}
+	conf, err := ParseConfig(f)
+	if err != nil {
+		t.Error(err)
+	}
 	detailedDeepEqual(t, conf, pacmanConfRef)
 }

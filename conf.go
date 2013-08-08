@@ -15,44 +15,46 @@ import (
 
 type PacmanOption uint
 
+// The config options declared belowe are in order of appearance in the
+// pacman.conf manpage.
+
 const (
 	ConfUseSyslog PacmanOption = 1 << iota
-	ConfShowSize
-	ConfUseDelta
+	ConfColor
 	ConfTotalDownload
 	ConfCheckSpace
 	ConfVerbosePkgLists
-	ConfILoveCandy
 )
 
 var optionsMap = map[string]PacmanOption{
 	"UseSyslog":       ConfUseSyslog,
-	"ShowSize":        ConfShowSize,
-	"UseDelta":        ConfUseDelta,
+	"Color":           ConfColor,
 	"TotalDownload":   ConfTotalDownload,
 	"CheckSpace":      ConfCheckSpace,
 	"VerbosePkgLists": ConfVerbosePkgLists,
-	"ILoveCandy":      ConfILoveCandy,
 }
 
 type PacmanConfig struct {
-	CacheDir     []string
-	HoldPkg      []string
-	SyncFirst    []string
-	IgnoreGroup  []string
-	IgnorePkg    []string
-	NoExtract    []string
-	NoUpgrade    []string
-	RootDir      string
-	DBPath       string
-	GPGDir       string
-	LogFile      string
-	Architecture string
-	XferCommand  string
-	CleanMethod  string
-	SigLevel     SigLevel
-	Options      PacmanOption
-	Repos        []RepoConfig
+	RootDir            string
+	DBPath             string
+	CacheDir           []string
+	GPGDir             string
+	LogFile            string
+	HoldPkg            []string
+	IgnorePkg          []string
+	IgnoreGroup        []string
+	Include            []string
+	Architecture       string
+	XferCommand        string
+	NoUpgrade          []string
+	NoExtract          []string
+	CleanMethod        string
+	SigLevel           SigLevel
+	LocalFileSigLevel  SigLevel
+	RemoteFileSigLevel SigLevel
+	UseDelta           string
+	Options            PacmanOption
+	Repos              []RepoConfig
 }
 
 type RepoConfig struct {
