@@ -3,6 +3,7 @@
 // Copyright (c) 2013 The go-alpm Authors
 //
 // MIT Licensed. See LICENSE for details.
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdarg.h>

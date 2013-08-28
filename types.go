@@ -3,6 +3,7 @@
 // Copyright (c) 2013 The go-alpm Authors
 //
 // MIT Licensed. See LICENSE for details.
+
 package alpm
 
 // #cgo CFLAGS: -D_FILE_OFFSET_BITS=64

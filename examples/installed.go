@@ -3,6 +3,7 @@
 // Copyright (c) 2013 The go-alpm Authors
 //
 // MIT Licensed. See LICENSE for details.
+
 package main
 
 import (

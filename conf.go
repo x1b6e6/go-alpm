@@ -3,6 +3,7 @@
 // Copyright (c) 2013 The go-alpm Authors
 //
 // MIT Licensed. See LICENSE for details.
+
 package alpm
 
 import (
@@ -17,9 +18,6 @@ import (
 )
 
 type PacmanOption uint
-
-// The config options declared belowe are in order of appearance in the
-// pacman.conf manpage.
 
 const (
 	ConfUseSyslog PacmanOption = 1 << iota
@@ -37,6 +35,8 @@ var optionsMap = map[string]PacmanOption{
 	"VerbosePkgLists": ConfVerbosePkgLists,
 }
 
+//  PacmanConfig is a type for holding pacman options parsed from pacman
+//  configuration data passed to ParseConfig.
 type PacmanConfig struct {
 	RootDir            string
 	DBPath             string
@@ -60,12 +60,15 @@ type PacmanConfig struct {
 	Repos              []RepoConfig
 }
 
+// RepoConfig is a type that stores the signature level of a repository
+// specified in the pacman config file.
 type RepoConfig struct {
 	Name     string
 	SigLevel SigLevel
 	Servers  []string
 }
 
+// Constants for pacman configuration parsing
 const (
 	tokenSection = iota
 	tokenKey
@@ -83,6 +86,10 @@ type confReader struct {
 	Lineno uint
 }
 
+// newConfReader reads from the io.Reader if it is buffered and returns a
+// confReader containing the number of bytes read and 0 for the first line. If
+// r is not a buffered reader, a new buffered reader is created using r as its
+// input and returned.
 func newConfReader(r io.Reader) confReader {
 	if buf, ok := r.(*bufio.Reader); ok {
 		return confReader{buf, 0}
