@@ -3,6 +3,12 @@
 // Copyright (c) 2013 The go-alpm Authors
 //
 // MIT Licensed. See LICENSE for details.
+
+// Package alpm implements Go bindings to the libalpm library used by Pacman,
+// the Arch Linux package manager. Libalpm allows the creation of custom front
+// ends to the Arch Linux package ecosystem.
+//
+// Libalpm does not include support for the Arch User Repository (AUR).
 package alpm
 
 // #include <alpm.h>
