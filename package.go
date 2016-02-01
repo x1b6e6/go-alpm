@@ -178,3 +178,12 @@ func (pkg Package) ComputeRequiredBy() []string {
 	}
 	return requiredby
 }
+
+func (pkg Package) NewVersion(l DbList) *Package {
+	ptr := C.alpm_sync_newversion(pkg.pmpkg,
+		(*C.alpm_list_t)(unsafe.Pointer(l.list)))
+	if ptr == nil {
+		return nil
+	}
+	return &Package{ptr, l.handle}
+}
