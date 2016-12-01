@@ -25,6 +25,7 @@ const (
 	ConfTotalDownload
 	ConfCheckSpace
 	ConfVerbosePkgLists
+	ConfILoveCandy
 )
 
 var optionsMap = map[string]PacmanOption{
@@ -33,6 +34,7 @@ var optionsMap = map[string]PacmanOption{
 	"TotalDownload":   ConfTotalDownload,
 	"CheckSpace":      ConfCheckSpace,
 	"VerbosePkgLists": ConfVerbosePkgLists,
+	"ILoveCandy":      ConfILoveCandy,
 }
 
 //  PacmanConfig is a type for holding pacman options parsed from pacman
