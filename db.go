@@ -122,6 +122,7 @@ func (db Db) PkgByName(name string) (*Package, error) {
 	return &Package{ptr, db.handle}, nil
 }
 
+// PkgCachebyGroup returns a PackageList of packages belonging to a group
 func (l DbList) PkgCachebyGroup(name string) (PackageList, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))

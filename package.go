@@ -50,7 +50,7 @@ func (l PackageList) Slice() []Package {
 	return slice
 }
 
-// Credit to shining
+// SortBySize returns a PackageList sorted by size
 func (l PackageList) SortBySize() PackageList {
 	pkgcache := (*list)(unsafe.Pointer(
 		C.alpm_list_msort(unsafe.Pointer(l.list),

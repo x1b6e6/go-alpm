@@ -153,7 +153,6 @@ func (rdr *confReader) ParseLine() (tok iniToken, err error) {
 		}
 		return
 	}
-	panic("impossible")
 }
 
 func ParseConfig(r io.Reader) (conf PacmanConfig, err error) {
@@ -238,7 +237,6 @@ lineloop:
 			}
 		}
 	}
-	panic("impossible")
 }
 
 func (conf *PacmanConfig) SetDefaults() {
