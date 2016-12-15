@@ -8,6 +8,15 @@ package alpm
 
 /*
 #include <alpm.h>
+
+int pkg_cmp(const void *v1, const void *v2)
+{
+    alpm_pkg_t *p1 = (alpm_pkg_t *)v1;
+    alpm_pkg_t *p2 = (alpm_pkg_t *)v2;
+    unsigned long int s1 = alpm_pkg_get_isize(p1);
+    unsigned long int s2 = alpm_pkg_get_isize(p2);
+    return(s2 - s1);
+}
 */
 import "C"
 
@@ -39,6 +48,16 @@ func (l PackageList) Slice() []Package {
 		return nil
 	})
 	return slice
+}
+
+// Credit to shining
+func (l PackageList) SortBySize() PackageList {
+	pkgcache := (*list)(unsafe.Pointer(
+		C.alpm_list_msort(unsafe.Pointer(l.list),
+			C.alpm_list_count(unsafe.Pointer(l.list)),
+			C.alpm_list_fn_cmp(C.pkg_cmp))))
+
+	return PackageList{pkgcache, l.handle}
 }
 
 type DependList struct{ *list }

@@ -125,7 +125,7 @@ func (db Db) PkgByName(name string) (*Package, error) {
 func (l DbList) PkgCachebyGroup(name string) (PackageList, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
-	pkgcache := (*list)(unsafe.Pointer(C.alpm_find_group_pkgs((unsafe.Pointer(l.list)), cName)))
+	pkgcache := (*list)(unsafe.Pointer(C.alpm_find_group_pkgs(unsafe.Pointer(l.list), cName)))
 	if pkgcache == nil {
 		return PackageList{pkgcache, l.handle},
 			fmt.Errorf("Error when retrieving group %s from database list: %s",
