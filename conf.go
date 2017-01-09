@@ -37,8 +37,8 @@ var optionsMap = map[string]PacmanOption{
 	"ILoveCandy":      ConfILoveCandy,
 }
 
-//  PacmanConfig is a type for holding pacman options parsed from pacman
-//  configuration data passed to ParseConfig.
+// PacmanConfig is a type for holding pacman options parsed from pacman
+// configuration data passed to ParseConfig.
 type PacmanConfig struct {
 	RootDir            string
 	DBPath             string
@@ -172,10 +172,9 @@ lineloop:
 			l := len(rdrStack)
 			if l == 1 {
 				return conf, nil
-			} else {
-				rdr = rdrStack[l-2]
-				rdrStack = rdrStack[:l-1]
 			}
+			rdr = rdrStack[l-2]
+			rdrStack = rdrStack[:l-1]
 		default:
 			return conf, err
 		case nil:
@@ -224,17 +223,17 @@ lineloop:
 				// key-value option.
 				fld := confReflect.FieldByName(line.Name)
 				if !fld.IsValid() || !fld.CanAddr() {
-					err = fmt.Errorf("unknown option at line %d: %s", rdr.Lineno, line.Name)
+					_ = fmt.Errorf("unknown option at line %d: %s", rdr.Lineno, line.Name)
 					continue
 				}
 
-				switch field_p := fld.Addr().Interface().(type) {
+				switch fieldP := fld.Addr().Interface().(type) {
 				case *string:
 					// single valued option.
-					*field_p = strings.Join(line.Values, " ")
+					*fieldP = strings.Join(line.Values, " ")
 				case *[]string:
 					//many valued option.
-					*field_p = append(*field_p, line.Values...)
+					*fieldP = append(*fieldP, line.Values...)
 				}
 			}
 		}
