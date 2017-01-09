@@ -223,9 +223,11 @@ lineloop:
 			} else {
 				// key-value option.
 				fld := confReflect.FieldByName(line.Name)
-				if !fld.IsValid() {
+				if !fld.IsValid() || !fld.CanAddr() {
 					err = fmt.Errorf("unknown option at line %d: %s", rdr.Lineno, line.Name)
+					continue
 				}
+
 				switch field_p := fld.Addr().Interface().(type) {
 				case *string:
 					// single valued option.
