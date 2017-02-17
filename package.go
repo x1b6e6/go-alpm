@@ -25,22 +25,26 @@ import (
 	"unsafe"
 )
 
+// Package describes a single package and associated handle.
 type Package struct {
 	pmpkg  *C.alpm_pkg_t
 	handle Handle
 }
 
+// PackageList describes a linked list of packages and associated handle.
 type PackageList struct {
 	*list
 	handle Handle
 }
 
+// ForEach executes an action on each package of the PackageList.
 func (l PackageList) ForEach(f func(Package) error) error {
 	return l.forEach(func(p unsafe.Pointer) error {
 		return f(Package{(*C.alpm_pkg_t)(p), l.handle})
 	})
 }
 
+// Slice converts the PackageList to a Package Slice.
 func (l PackageList) Slice() []Package {
 	slice := []Package{}
 	l.ForEach(func(p Package) error {
@@ -50,16 +54,19 @@ func (l PackageList) Slice() []Package {
 	return slice
 }
 
-// SortBySize returns a PackageList sorted by size
+// SortBySize returns a PackageList sorted by size.
 func (l PackageList) SortBySize() PackageList {
-	pkgcache := (*list)(unsafe.Pointer(
-		C.alpm_list_msort(unsafe.Pointer(l.list),
-			C.alpm_list_count(unsafe.Pointer(l.list)),
+	pkgList := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
+
+	pkgCache := (*list)(unsafe.Pointer(
+		C.alpm_list_msort(pkgList,
+			C.alpm_list_count(pkgList),
 			C.alpm_list_fn_cmp(C.pkg_cmp))))
 
-	return PackageList{pkgcache, l.handle}
+	return PackageList{pkgCache, l.handle}
 }
 
+// DependList describes a linkedlist of dependency type packages.
 type DependList struct{ *list }
 
 func (l DependList) ForEach(f func(Depend) error) error {
@@ -183,7 +190,7 @@ func (pkg Package) Reason() PkgReason {
 	return PkgReason(reason)
 }
 
-// Returns the names of reverse dependencies of a package
+// ComputeRequiredBy returns the names of reverse dependencies of a package
 func (pkg Package) ComputeRequiredBy() []string {
 	result := C.alpm_pkg_compute_requiredby(pkg.pmpkg)
 	requiredby := make([]string, 0)
@@ -198,6 +205,7 @@ func (pkg Package) ComputeRequiredBy() []string {
 	return requiredby
 }
 
+// NewVersion checks if there is a new version of the package in the Synced DBs.
 func (pkg Package) NewVersion(l DbList) *Package {
 	ptr := C.alpm_sync_newversion(pkg.pmpkg,
 		(*C.alpm_list_t)(unsafe.Pointer(l.list)))

@@ -14,10 +14,14 @@ import (
 func (l DbList) FindSatisfier(depstring string) (*Package, error) {
 	cDepString := C.CString(depstring)
 	defer C.free(unsafe.Pointer(cDepString))
-	ptr := C.alpm_find_dbs_satisfier(unsafe.Pointer(l.handle.ptr), unsafe.Pointer(l.list), cDepString)
+
+	pkgList := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
+	pkgHandle := (*C.struct___alpm_handle_t)(unsafe.Pointer(l.handle.ptr))
+
+	ptr := C.alpm_find_dbs_satisfier(pkgHandle, pkgList, cDepString)
 	if ptr == nil {
 		return nil,
-			fmt.Errorf("Unable to satisfy dependency %s in Dblist\n", depstring)
+			fmt.Errorf("unable to satisfy dependency %s in Dblist", depstring)
 	}
 
 	return &Package{ptr, l.handle}, nil
@@ -27,10 +31,13 @@ func (l DbList) FindSatisfier(depstring string) (*Package, error) {
 func (l PackageList) FindSatisfier(depstring string) (*Package, error) {
 	cDepString := C.CString(depstring)
 	defer C.free(unsafe.Pointer(cDepString))
-	ptr := C.alpm_find_satisfier(unsafe.Pointer(l.list), cDepString)
+
+	pkgList := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
+
+	ptr := C.alpm_find_satisfier(pkgList, cDepString)
 	if ptr == nil {
 		return nil,
-			fmt.Errorf("Unable to find dependency %s in PackageList\n", depstring)
+			fmt.Errorf("unable to find dependency %s in PackageList", depstring)
 	}
 
 	return &Package{ptr, l.handle}, nil

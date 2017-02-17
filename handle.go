@@ -54,7 +54,7 @@ func (h Handle) DbPath() string {
 	return C.GoString(C.alpm_option_get_dbpath(h.ptr))
 }
 
-// Get the last pm_error
+// LastError gets the last pm_error
 func (h Handle) LastError() error {
 	if h.ptr != nil {
 		c_err := C.alpm_errno(h.ptr)
