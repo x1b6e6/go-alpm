@@ -13,9 +13,15 @@ int pkg_cmp(const void *v1, const void *v2)
 {
     alpm_pkg_t *p1 = (alpm_pkg_t *)v1;
     alpm_pkg_t *p2 = (alpm_pkg_t *)v2;
-    unsigned long int s1 = alpm_pkg_get_isize(p1);
-    unsigned long int s2 = alpm_pkg_get_isize(p2);
-    return(s2 - s1);
+    off_t s1 = alpm_pkg_get_isize(p1);
+    off_t s2 = alpm_pkg_get_isize(p2);
+
+    if (s1 > s2)
+        return -1;
+    else if (s1 < s2)
+        return 1;
+    else
+        return 0;
 }
 */
 import "C"
