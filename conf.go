@@ -6,6 +6,9 @@
 
 package alpm
 
+//#include <alpm.h>
+import "C"
+
 import (
 	"bufio"
 	"bytes"
@@ -13,6 +16,7 @@ import (
 	"io"
 	"os"
 	"reflect"
+	"strconv"
 	"strings"
 	"syscall"
 )
@@ -43,6 +47,7 @@ type PacmanConfig struct {
 	RootDir            string
 	DBPath             string
 	CacheDir           []string
+	HookDir            []string
 	GPGDir             string
 	LogFile            string
 	HoldPkg            []string
@@ -57,7 +62,7 @@ type PacmanConfig struct {
 	SigLevel           SigLevel
 	LocalFileSigLevel  SigLevel
 	RemoteFileSigLevel SigLevel
-	UseDelta           string
+	UseDelta           float64
 	Options            PacmanOption
 	Repos              []RepoConfig
 }
@@ -208,6 +213,17 @@ lineloop:
 				rdr = newConfReader(f)
 				rdrStack = append(rdrStack, rdr)
 				continue lineloop
+			case "UseDelta":
+				if len(line.Values) > 0 {
+					deltaRatio, err := strconv.ParseFloat(line.Values[0], 64)
+
+					if err != nil {
+						return conf, err
+					}
+
+					conf.UseDelta = deltaRatio
+				}
+				continue lineloop
 			}
 
 			if currentSection != "options" {
@@ -284,5 +300,41 @@ func (conf *PacmanConfig) CreateHandle() (*Handle, error) {
 			db.SetServers(repoconf.Servers)
 		}
 	}
+
+	for _, dir := range conf.CacheDir {
+		C.alpm_option_add_cachedir(h.ptr, C.CString(dir))
+	}
+
+	for _, dir := range conf.HookDir {
+		C.alpm_option_add_hookdir(h.ptr, C.CString(dir))
+	}
+
+	C.alpm_option_set_gpgdir(h.ptr, C.CString(conf.GPGDir))
+	C.alpm_option_set_logfile(h.ptr, C.CString(conf.LogFile))
+
+	for _, pkg := range conf.IgnorePkg {
+		C.alpm_option_add_ignorepkg(h.ptr, C.CString(pkg))
+	}
+
+	for _, group := range conf.IgnoreGroup {
+		C.alpm_option_add_ignoregroup(h.ptr, C.CString(group))
+	}
+
+	C.alpm_option_set_arch(h.ptr, C.CString(conf.Architecture))
+
+	for _, file := range conf.NoUpgrade {
+		C.alpm_option_add_noupgrade(h.ptr, C.CString(file))
+	}
+
+	for _, file := range conf.NoExtract {
+		C.alpm_option_add_noextract(h.ptr, C.CString(file))
+	}
+
+	C.alpm_option_set_default_siglevel(h.ptr, C.alpm_siglevel_t(conf.SigLevel))
+	C.alpm_option_set_local_file_siglevel(h.ptr, C.alpm_siglevel_t(conf.LocalFileSigLevel))
+	C.alpm_option_set_remote_file_siglevel(h.ptr, C.alpm_siglevel_t(conf.RemoteFileSigLevel))
+
+	C.alpm_option_set_deltaratio(h.ptr, C.double(conf.UseDelta))
+
 	return h, nil
 }
