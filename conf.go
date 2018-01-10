@@ -336,5 +336,13 @@ func (conf *PacmanConfig) CreateHandle() (*Handle, error) {
 
 	C.alpm_option_set_deltaratio(h.ptr, C.double(conf.UseDelta))
 
+	if (conf.Options & ConfUseSyslog) > 0 {
+		C.alpm_option_set_usesyslog(h.ptr, 1)
+	}
+
+	if (conf.Options & ConfCheckSpace) > 0 {
+		C.alpm_option_set_checkspace(h.ptr, 1)
+	}
+
 	return h, nil
 }
