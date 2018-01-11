@@ -288,6 +288,7 @@ func (conf *PacmanConfig) CreateHandle() (*Handle, error) {
 			return nil, fmt.Errorf("architecture is 'auto' but couldn't uname()")
 		}
 	}
+
 	for _, repoconf := range conf.Repos {
 		// TODO: set SigLevel
 		db, err := h.RegisterSyncDb(repoconf.Name, 0)
@@ -301,47 +302,83 @@ func (conf *PacmanConfig) CreateHandle() (*Handle, error) {
 		}
 	}
 
-	for _, dir := range conf.CacheDir {
-		C.alpm_option_add_cachedir(h.ptr, C.CString(dir))
+	err = h.SetCacheDirs(conf.CacheDir...)
+	if err != nil {
+		return nil, err
+	}
+		
+	// add hook directories 1-by-1 to avoid overwriting the system directory
+	for _,dir := range conf.HookDir {
+		err = h.AddHookDir(dir)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	for _, dir := range conf.HookDir {
-		C.alpm_option_add_hookdir(h.ptr, C.CString(dir))
+	err = h.SetGPGDir(conf.GPGDir)
+	if err != nil {
+		return nil, err
 	}
 
-	C.alpm_option_set_gpgdir(h.ptr, C.CString(conf.GPGDir))
-	C.alpm_option_set_logfile(h.ptr, C.CString(conf.LogFile))
-
-	for _, pkg := range conf.IgnorePkg {
-		C.alpm_option_add_ignorepkg(h.ptr, C.CString(pkg))
+	err = h.SetLogFile(conf.LogFile)
+	if err != nil {
+		return nil, err
 	}
 
-	for _, group := range conf.IgnoreGroup {
-		C.alpm_option_add_ignoregroup(h.ptr, C.CString(group))
+	err = h.SetIgnorePkgs(conf.IgnorePkg...)
+	if err != nil {
+		return nil, err
 	}
 
-	C.alpm_option_set_arch(h.ptr, C.CString(conf.Architecture))
-
-	for _, file := range conf.NoUpgrade {
-		C.alpm_option_add_noupgrade(h.ptr, C.CString(file))
+	err = h.SetIgnoreGroups(conf.IgnoreGroup...)
+	if err != nil {
+		return nil, err
 	}
 
-	for _, file := range conf.NoExtract {
-		C.alpm_option_add_noextract(h.ptr, C.CString(file))
+	err = h.SetArch(conf.Architecture)
+	if err != nil {
+		return nil, err
+	}
+	
+	h.SetNoUpgrades(conf.NoUpgrade...)
+	if err != nil {
+		return nil, err
 	}
 
-	C.alpm_option_set_default_siglevel(h.ptr, C.alpm_siglevel_t(conf.SigLevel))
-	C.alpm_option_set_local_file_siglevel(h.ptr, C.alpm_siglevel_t(conf.LocalFileSigLevel))
-	C.alpm_option_set_remote_file_siglevel(h.ptr, C.alpm_siglevel_t(conf.RemoteFileSigLevel))
-
-	C.alpm_option_set_deltaratio(h.ptr, C.double(conf.UseDelta))
-
-	if (conf.Options & ConfUseSyslog) > 0 {
-		C.alpm_option_set_usesyslog(h.ptr, 1)
+	h.SetNoExtracts(conf.NoExtract...)
+	if err != nil {
+		return nil, err
 	}
 
-	if (conf.Options & ConfCheckSpace) > 0 {
-		C.alpm_option_set_checkspace(h.ptr, 1)
+	err = h.SetDefaultSigLevel(conf.SigLevel)
+	if err != nil {
+		return nil, err
+	}
+
+	err = h.SetLocalFileSigLevel(conf.LocalFileSigLevel)
+	if err != nil {
+		return nil, err
+	}
+
+
+	err = h.SetRemoteFileSigLevel(conf.RemoteFileSigLevel)
+	if err != nil {
+		return nil, err
+	}
+
+	err = h.SetDeltaRatio(conf.UseDelta)
+	if err != nil {
+		return nil, err
+	}
+
+	err = h.SetUseSyslog(conf.Options & ConfUseSyslog > 0)
+	if err != nil {
+		return nil, err
+	}
+
+	err = h.SetCheckSpace(conf.Options & ConfCheckSpace > 0)
+	if err != nil {
+		return nil, err
 	}
 
 	return h, nil
