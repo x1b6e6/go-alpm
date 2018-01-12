@@ -6,9 +6,6 @@
 
 package alpm
 
-//#include <alpm.h>
-import "C"
-
 import (
 	"bufio"
 	"bytes"
@@ -249,7 +246,7 @@ lineloop:
 					*fieldP = strings.Join(line.Values, " ")
 				case *[]string:
 					//many valued option.
-					*fieldP = append(*fieldP, line.Values...)
+					*fieldP = line.Values
 				}
 			}
 		}
@@ -259,6 +256,17 @@ lineloop:
 func (conf *PacmanConfig) SetDefaults() {
 	conf.RootDir = "/"
 	conf.DBPath = "/var/lib/pacman"
+	conf.DBPath = "/var/lib/pacman/"
+	conf.CacheDir = []string{"/var/cache/pacman/pkg/"}
+	conf.HookDir = []string{"/etc/pacman.d/hooks/"}
+	conf.GPGDir = "/etc/pacman.d/gnupg/"
+	conf.LogFile = "/var/log/pacman.log"
+	conf.UseDelta = 0.7
+	conf.CleanMethod = "KeepInstalled"
+
+	conf.SigLevel = SigPackage | SigPackageOptional | SigDatabase | SigDatabaseOptional
+	conf.LocalFileSigLevel = SigUseDefault
+	conf.RemoteFileSigLevel = SigUseDefault
 }
 
 func getArch() (string, error) {
