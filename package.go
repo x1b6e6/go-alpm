@@ -250,3 +250,8 @@ func (pkg Package) NewVersion(l DbList) *Package {
 	}
 	return &Package{ptr, l.handle}
 }
+
+func (pkg Package) ShouldIgnore() bool {
+	result := C.alpm_pkg_should_ignore(pkg.handle.ptr, pkg.pmpkg)
+	return result == 1
+}
