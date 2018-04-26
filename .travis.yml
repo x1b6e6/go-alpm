@@ -1,0 +1,13 @@
+sudo: required
+notifications:
+    email: false
+language: generic
+script:
+    - curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash
+
+arch:
+  packages:
+    - go
+    - git
+  script:
+    - go test -v .
