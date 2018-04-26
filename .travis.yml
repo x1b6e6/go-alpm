@@ -2,12 +2,15 @@ sudo: required
 notifications:
     email: false
 language: generic
-script:
-    - curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash
+services:
+- docker
 
 arch:
   packages:
-    - go
-    - git
+  - git
+  - go
   script:
-    - go test -v .
+  - "./testing/test.sh"
+
+script:
+- "curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash"
