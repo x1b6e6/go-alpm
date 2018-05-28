@@ -22,7 +22,11 @@ This project is MIT Licensed. See LICENSE for details.
 	cd $GOPATH/src/github.com/jguer/go-alpm/examples
 	go run installed.go
 
-## Contributors
+## Current Maintainers
+* Morganamilo 
+* Jguer
+
+## Original Contributors
 
 * Mike Rosset
 * Dave Reisner
