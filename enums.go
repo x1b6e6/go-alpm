@@ -89,9 +89,11 @@ const (
 	SigStatusKeyDisabled
 )
 
+type LogLevel uint16
+
 // Logging levels.
 const (
-	LogError uint16 = 1 << iota
+	LogError LogLevel = 1 << iota
 	LogWarning
 	LogDebug
 	LogFunction
