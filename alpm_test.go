@@ -28,12 +28,6 @@ func init() {
 	}
 }
 
-func ExampleVersion() {
-	fmt.Println(Version())
-	// output:
-	// 11.0.0
-}
-
 func ExampleVerCmp() {
 	fmt.Println(VerCmp("1.0-2", "2.0-1") < 0)
 	fmt.Println(VerCmp("1:1.0-2", "2.0-1") > 0)
