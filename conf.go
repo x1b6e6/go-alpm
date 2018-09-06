@@ -167,9 +167,9 @@ func ParseConfig(r io.Reader) (conf PacmanConfig, err error) {
 	var curRepo *RepoConfig
 lineloop:
 	for {
-		line, err := rdr.ParseLine()
+		line, errParse := rdr.ParseLine()
 		// fmt.Printf("%+v\n", line)
-		switch err {
+		switch errParse {
 		case io.EOF:
 			// pop reader stack.
 			l := len(rdrStack)
@@ -280,7 +280,7 @@ lineloop:
 		conf.CacheDir = []string{"/var/cache/pacman/pkg/"} //should only be set if the config does not specify this
 	}
 
-	for n, _ := range conf.Repos {
+	for n := range conf.Repos {
 		repo := &conf.Repos[n]
 		if repo.Usage == 0 {
 			repo.Usage = UsageAll
