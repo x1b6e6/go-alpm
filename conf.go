@@ -167,9 +167,9 @@ func ParseConfig(r io.Reader) (conf PacmanConfig, err error) {
 	var curRepo *RepoConfig
 lineloop:
 	for {
-		line, errParse := rdr.ParseLine()
+		line, err := rdr.ParseLine()
 		// fmt.Printf("%+v\n", line)
-		switch errParse {
+		switch err {
 		case io.EOF:
 			// pop reader stack.
 			l := len(rdrStack)
