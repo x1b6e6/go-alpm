@@ -41,7 +41,7 @@ Files        : {{ range .Files }}
                {{ .Name }} {{ .Size }}{{ end }}
 `
 
-var pkginfo_tpl *template.Template
+var pkginfoTemplate *template.Template
 
 type PrettyPackage struct {
 	Package
@@ -57,7 +57,7 @@ func (p PrettyPackage) PrettyInstallDate() string {
 
 func init() {
 	var er error
-	pkginfo_tpl, er = template.New("info").Parse(pkginfo_template)
+	pkginfoTemplate, er = template.New("info").Parse(pkginfo_template)
 	if er != nil {
 		fmt.Printf("couldn't compile template: %s\n", er)
 		panic("template parsing error")
@@ -77,14 +77,14 @@ func TestPkginfo(t *testing.T) {
 
 	pkg, _ := db.PkgByName("pacman")
 	buf := bytes.NewBuffer(nil)
-	pkginfo_tpl.Execute(buf, PrettyPackage{*pkg})
+	pkginfoTemplate.Execute(buf, PrettyPackage{*pkg})
 	t.Logf("%s...", buf.Bytes()[:1024])
 	t.Logf("Should ignore %t", pkg.ShouldIgnore())
 
 	pkg, _ = db.PkgByName("linux")
 	if pkg != nil {
 		buf = bytes.NewBuffer(nil)
-		pkginfo_tpl.Execute(buf, PrettyPackage{*pkg})
+		pkginfoTemplate.Execute(buf, PrettyPackage{*pkg})
 		t.Logf("%s...", buf.Bytes()[:1024])
 		t.Logf("Should ignore %t", pkg.ShouldIgnore())
 	}

@@ -16,7 +16,7 @@ import (
 	"unsafe"
 )
 
-// Description of a dependency.
+// Depend provides a description of a dependency.
 type Depend struct {
 	Name        string
 	Version     string
@@ -61,7 +61,7 @@ func (dep Depend) String() string {
 	return dep.Name + dep.Mod.String() + dep.Version
 }
 
-// Description of package files.
+// File provides a description of package files.
 type File struct {
 	Name string
 	Size int64
