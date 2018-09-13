@@ -502,7 +502,7 @@ func (h Handle) CheckSpace() (bool, error) {
 }
 
 func (h Handle) SetCheckSpace(value bool) error {
-	var cValue C.int = 0
+	var cValue C.int
 	if value {
 		cValue = 1
 	}
