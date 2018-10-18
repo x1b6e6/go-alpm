@@ -40,7 +40,7 @@ func ExampleVerCmp() {
 
 func TestRevdeps(t *testing.T) {
 	db, _ := h.LocalDb()
-	pkg, _ := db.PkgByName("glibc")
+	pkg, _ := db.Pkg("glibc")
 	for i, pkgname := range pkg.ComputeRequiredBy() {
 		t.Logf(pkgname)
 		if i == 10 {

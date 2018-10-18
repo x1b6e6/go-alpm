@@ -75,13 +75,13 @@ func TestPkginfo(t *testing.T) {
 	t.Log("Printing package information for pacman")
 	db, _ := h.LocalDb()
 
-	pkg, _ := db.PkgByName("glibc")
+	pkg, _ := db.Pkg("glibc")
 	buf := bytes.NewBuffer(nil)
 	pkginfoTemplate.Execute(buf, PrettyPackage{pkg})
 	t.Logf("%s...", buf.Bytes()[:1024])
 	t.Logf("Should ignore %t", pkg.ShouldIgnore())
 
-	pkg, _ = db.PkgByName("linux")
+	pkg, _ = db.Pkg("linux")
 	if pkg != nil {
 		buf = bytes.NewBuffer(nil)
 		pkginfoTemplate.Execute(buf, PrettyPackage{pkg})

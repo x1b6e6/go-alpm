@@ -97,6 +97,24 @@ func (h *Handle) RegisterSyncDb(dbname string, siglevel SigLevel) (*Db, error) {
 	return &Db{db, *h}, nil
 }
 
+func (db *Db) Unregister() error {
+	ok := C.alpm_db_unregister(db.ptr)
+	if ok != 0 {
+		return db.handle.LastError()
+	}
+
+	return nil
+}
+
+func (h *Handle) UnregisterAllSyncDbs() error {
+	ok := C.alpm_unregister_all_syncdbs(h.ptr)
+	if ok != 0 {
+		return h.LastError()
+	}
+
+	return nil
+}
+
 // Name returns name of the db
 func (db *Db) Name() string {
 	return C.GoString(C.alpm_db_get_name(db.ptr))
@@ -118,35 +136,38 @@ func (db *Db) SetServers(servers []string) {
 	}
 }
 
+// AddServers adds a string to the server list.
+func (db *Db) AddServer(server string) {
+	Csrv := C.CString(server)
+	defer C.free(unsafe.Pointer(Csrv))
+	C.alpm_db_add_server(db.ptr, Csrv)
+}
+
 // SetUsage sets the Usage of the database
 func (db *Db) SetUsage(usage Usage) {
 	C.alpm_db_set_usage(db.ptr, C.int(usage))
 }
 
-// PkgByName searches a package in db.
-func (db *Db) PkgByName(name string) (*Package, error) {
+// Name searches a package in db.
+func (db *Db) Pkg(name string) (*Package, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.alpm_db_get_pkg(db.ptr, cName)
 	if ptr == nil {
-		return nil,
-			fmt.Errorf("Error when retrieving %s from database %s: %s",
-				name, db.Name(), db.handle.LastError())
+		return nil, db.handle.LastError()
 	}
 	return &Package{ptr, db.handle}, nil
 }
 
 // PkgCachebyGroup returns a PackageList of packages belonging to a group
-func (l DbList) PkgCachebyGroup(name string) (PackageList, error) {
+func (l DbList) FindGroupPkgs(name string) (PackageList, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	pkglist := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
 
 	pkgcache := (*list)(unsafe.Pointer(C.alpm_find_group_pkgs(pkglist, cName)))
 	if pkgcache == nil {
-		return PackageList{pkgcache, l.handle},
-			fmt.Errorf("Error when retrieving group %s from database list: %s",
-				name, l.handle.LastError())
+		return PackageList{pkgcache, l.handle}, l.handle.LastError()
 	}
 
 	return PackageList{pkgcache, l.handle}, nil
