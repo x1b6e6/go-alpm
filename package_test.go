@@ -73,7 +73,7 @@ func TestPkginfo(t *testing.T) {
 	}
 
 	t.Log("Printing package information for pacman")
-	db, _ := h.LocalDb()
+	db, _ := h.LocalDB()
 
 	pkg, _ := db.Pkg("glibc")
 	buf := bytes.NewBuffer(nil)

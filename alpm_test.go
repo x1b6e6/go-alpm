@@ -39,7 +39,7 @@ func ExampleVerCmp() {
 }
 
 func TestRevdeps(t *testing.T) {
-	db, _ := h.LocalDb()
+	db, _ := h.LocalDB()
 	pkg, _ := db.Pkg("glibc")
 	for i, pkgname := range pkg.ComputeRequiredBy() {
 		t.Logf(pkgname)
@@ -56,7 +56,7 @@ func TestLocalDB(t *testing.T) {
 			t.Errorf("local db failed")
 		}
 	}()
-	db, _ := h.LocalDb()
+	db, _ := h.LocalDB()
 	number := 0
 	for _, pkg := range db.PkgCache().Slice() {
 		number++
