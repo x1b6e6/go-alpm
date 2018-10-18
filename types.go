@@ -243,15 +243,15 @@ func (question QuestionReplace) Replace() bool {
 	return question.ptr.replace == 1
 }
 
-func (question QuestionReplace) NewPkg(h *Handle) Package {
-	return Package{
+func (question QuestionReplace) NewPkg(h *Handle) *Package {
+	return &Package{
 		question.ptr.newpkg,
 		*h,
 	}
 }
 
-func (question QuestionReplace) OldPkg(h *Handle) Package {
-	return Package{
+func (question QuestionReplace) OldPkg(h *Handle) *Package {
+	return &Package{
 		question.ptr.oldpkg,
 		*h,
 	}
