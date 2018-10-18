@@ -98,18 +98,18 @@ func (h *Handle) RegisterSyncDb(dbname string, siglevel SigLevel) (*Db, error) {
 }
 
 // Name returns name of the db
-func (db Db) Name() string {
+func (db *Db) Name() string {
 	return C.GoString(C.alpm_db_get_name(db.ptr))
 }
 
 // Servers returns host server URL.
-func (db Db) Servers() []string {
+func (db *Db) Servers() []string {
 	ptr := unsafe.Pointer(C.alpm_db_get_servers(db.ptr))
 	return StringList{(*list)(ptr)}.Slice()
 }
 
 // SetServers sets server list to use.
-func (db Db) SetServers(servers []string) {
+func (db *Db) SetServers(servers []string) {
 	C.alpm_db_set_servers(db.ptr, nil)
 	for _, srv := range servers {
 		Csrv := C.CString(srv)
@@ -119,12 +119,12 @@ func (db Db) SetServers(servers []string) {
 }
 
 // SetUsage sets the Usage of the database
-func (db Db) SetUsage(usage Usage) {
+func (db *Db) SetUsage(usage Usage) {
 	C.alpm_db_set_usage(db.ptr, C.int(usage))
 }
 
 // PkgByName searches a package in db.
-func (db Db) PkgByName(name string) (*Package, error) {
+func (db *Db) PkgByName(name string) (*Package, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.alpm_db_get_pkg(db.ptr, cName)
@@ -153,12 +153,12 @@ func (l DbList) PkgCachebyGroup(name string) (PackageList, error) {
 }
 
 // PkgCache returns the list of packages of the database
-func (db Db) PkgCache() PackageList {
+func (db *Db) PkgCache() PackageList {
 	pkgcache := (*list)(unsafe.Pointer(C.alpm_db_get_pkgcache(db.ptr)))
 	return PackageList{pkgcache, db.handle}
 }
 
-func (db Db) Search(targets []string) PackageList {
+func (db *Db) Search(targets []string) PackageList {
 	var needles *C.alpm_list_t
 
 	for _, str := range targets {
