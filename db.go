@@ -48,26 +48,26 @@ func (l DbList) Slice() []Db {
 }
 
 // LocalDb returns the local database relative to the given handle.
-func (h Handle) LocalDb() (*Db, error) {
+func (h *Handle) LocalDb() (*Db, error) {
 	db := C.alpm_get_localdb(h.ptr)
 	if db == nil {
 		return nil, h.LastError()
 	}
-	return &Db{db, h}, nil
+	return &Db{db, *h}, nil
 }
 
 // SyncDbs returns list of Synced DBs.
-func (h Handle) SyncDbs() (DbList, error) {
+func (h *Handle) SyncDbs() (DbList, error) {
 	dblist := C.alpm_get_syncdbs(h.ptr)
 	if dblist == nil {
-		return DbList{nil, h}, h.LastError()
+		return DbList{nil, *h}, h.LastError()
 	}
 	dblistPtr := unsafe.Pointer(dblist)
-	return DbList{(*list)(dblistPtr), h}, nil
+	return DbList{(*list)(dblistPtr), *h}, nil
 }
 
 // SyncDbByName finds a registered database by name.
-func (h Handle) SyncDbByName(name string) (db *Db, err error) {
+func (h *Handle) SyncDbByName(name string) (db *Db, err error) {
 	dblist, err := h.SyncDbs()
 	if err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (h Handle) SyncDbByName(name string) (db *Db, err error) {
 }
 
 // RegisterSyncDb Loads a sync database with given name and signature check level.
-func (h Handle) RegisterSyncDb(dbname string, siglevel SigLevel) (*Db, error) {
+func (h *Handle) RegisterSyncDb(dbname string, siglevel SigLevel) (*Db, error) {
 	cName := C.CString(dbname)
 	defer C.free(unsafe.Pointer(cName))
 
@@ -94,22 +94,22 @@ func (h Handle) RegisterSyncDb(dbname string, siglevel SigLevel) (*Db, error) {
 	if db == nil {
 		return nil, h.LastError()
 	}
-	return &Db{db, h}, nil
+	return &Db{db, *h}, nil
 }
 
 // Name returns name of the db
-func (db Db) Name() string {
+func (db *Db) Name() string {
 	return C.GoString(C.alpm_db_get_name(db.ptr))
 }
 
 // Servers returns host server URL.
-func (db Db) Servers() []string {
+func (db *Db) Servers() []string {
 	ptr := unsafe.Pointer(C.alpm_db_get_servers(db.ptr))
 	return StringList{(*list)(ptr)}.Slice()
 }
 
 // SetServers sets server list to use.
-func (db Db) SetServers(servers []string) {
+func (db *Db) SetServers(servers []string) {
 	C.alpm_db_set_servers(db.ptr, nil)
 	for _, srv := range servers {
 		Csrv := C.CString(srv)
@@ -119,12 +119,12 @@ func (db Db) SetServers(servers []string) {
 }
 
 // SetUsage sets the Usage of the database
-func (db Db) SetUsage(usage Usage) {
+func (db *Db) SetUsage(usage Usage) {
 	C.alpm_db_set_usage(db.ptr, C.int(usage))
 }
 
 // PkgByName searches a package in db.
-func (db Db) PkgByName(name string) (*Package, error) {
+func (db *Db) PkgByName(name string) (*Package, error) {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.alpm_db_get_pkg(db.ptr, cName)
@@ -153,12 +153,12 @@ func (l DbList) PkgCachebyGroup(name string) (PackageList, error) {
 }
 
 // PkgCache returns the list of packages of the database
-func (db Db) PkgCache() PackageList {
+func (db *Db) PkgCache() PackageList {
 	pkgcache := (*list)(unsafe.Pointer(C.alpm_db_get_pkgcache(db.ptr)))
 	return PackageList{pkgcache, db.handle}
 }
 
-func (db Db) Search(targets []string) PackageList {
+func (db *Db) Search(targets []string) PackageList {
 	var needles *C.alpm_list_t
 
 	for _, str := range targets {

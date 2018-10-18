@@ -44,7 +44,7 @@ Files        : {{ range .Files }}
 var pkginfoTemplate *template.Template
 
 type PrettyPackage struct {
-	Package
+	*Package
 }
 
 func (p PrettyPackage) PrettyBuildDate() string {
@@ -75,16 +75,16 @@ func TestPkginfo(t *testing.T) {
 	t.Log("Printing package information for pacman")
 	db, _ := h.LocalDb()
 
-	pkg, _ := db.PkgByName("pacman")
+	pkg, _ := db.PkgByName("glibc")
 	buf := bytes.NewBuffer(nil)
-	pkginfoTemplate.Execute(buf, PrettyPackage{*pkg})
+	pkginfoTemplate.Execute(buf, PrettyPackage{pkg})
 	t.Logf("%s...", buf.Bytes()[:1024])
 	t.Logf("Should ignore %t", pkg.ShouldIgnore())
 
 	pkg, _ = db.PkgByName("linux")
 	if pkg != nil {
 		buf = bytes.NewBuffer(nil)
-		pkginfoTemplate.Execute(buf, PrettyPackage{*pkg})
+		pkginfoTemplate.Execute(buf, PrettyPackage{pkg})
 		t.Logf("%s...", buf.Bytes()[:1024])
 		t.Logf("Should ignore %t", pkg.ShouldIgnore())
 	}
