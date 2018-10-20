@@ -47,25 +47,6 @@ func (l DBList) Slice() []DB {
 	return slice
 }
 
-// LocalDB returns the local database relative to the given handle.
-func (h *Handle) LocalDB() (*DB, error) {
-	db := C.alpm_get_localdb(h.ptr)
-	if db == nil {
-		return nil, h.LastError()
-	}
-	return &DB{db, *h}, nil
-}
-
-// SyncDBs returns list of Synced DBs.
-func (h *Handle) SyncDBs() (DBList, error) {
-	dblist := C.alpm_get_syncdbs(h.ptr)
-	if dblist == nil {
-		return DBList{nil, *h}, h.LastError()
-	}
-	dblistPtr := unsafe.Pointer(dblist)
-	return DBList{(*list)(dblistPtr), *h}, nil
-}
-
 // SyncDBByName finds a registered database by name.
 func (h *Handle) SyncDBByName(name string) (db *DB, err error) {
 	dblist, err := h.SyncDBs()

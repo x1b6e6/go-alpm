@@ -295,16 +295,6 @@ func (pkg *Package) ComputeOptionalFor() []string {
 	return optionalfor
 }
 
-// NewVersion checks if there is a new version of the package in the Synced DBs.
-func (pkg *Package) NewVersion(l DBList) *Package {
-	ptr := C.alpm_sync_newversion(pkg.pmpkg,
-		(*C.alpm_list_t)(unsafe.Pointer(l.list)))
-	if ptr == nil {
-		return nil
-	}
-	return &Package{ptr, l.handle}
-}
-
 func (pkg *Package) ShouldIgnore() bool {
 	result := C.alpm_pkg_should_ignore(pkg.handle.ptr, pkg.pmpkg)
 	return result == 1

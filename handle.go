@@ -25,43 +25,6 @@ type Handle struct {
 	ptr *C.alpm_handle_t
 }
 
-// Init initializes alpm handle
-func Init(root, dbpath string) (*Handle, error) {
-	cRoot := C.CString(root)
-	cDBPath := C.CString(dbpath)
-	var cErr C.alpm_errno_t
-	h := C.alpm_initialize(cRoot, cDBPath, &cErr)
-
-	defer C.free(unsafe.Pointer(cRoot))
-	defer C.free(unsafe.Pointer(cDBPath))
-
-	if cErr != 0 {
-		return nil, Error(cErr)
-	}
-
-	return &Handle{h}, nil
-}
-
-// Release releases the alpm handle
-func (h *Handle) Release() error {
-	if er := C.alpm_release(h.ptr); er != 0 {
-		return Error(er)
-	}
-	h.ptr = nil
-	return nil
-}
-
-// LastError gets the last pm_error
-func (h *Handle) LastError() error {
-	if h.ptr != nil {
-		cErr := C.alpm_errno(h.ptr)
-		if cErr != 0 {
-			return Error(cErr)
-		}
-	}
-	return nil
-}
-
 //
 //alpm options getters and setters
 //
@@ -486,6 +449,25 @@ func (h *Handle) SetDeltaRatio(ratio float64) error {
 		return h.LastError()
 	}
 	return nil
+}
+
+// LocalDB returns the local database relative to the given handle.
+func (h *Handle) LocalDB() (*DB, error) {
+	db := C.alpm_get_localdb(h.ptr)
+	if db == nil {
+		return nil, h.LastError()
+	}
+	return &DB{db, *h}, nil
+}
+
+// SyncDBs returns list of Synced DBs.
+func (h *Handle) SyncDBs() (DBList, error) {
+	dblist := C.alpm_get_syncdbs(h.ptr)
+	if dblist == nil {
+		return DBList{nil, *h}, h.LastError()
+	}
+	dblistPtr := unsafe.Pointer(dblist)
+	return DBList{(*list)(dblistPtr), *h}, nil
 }
 
 func (h *Handle) CheckSpace() (bool, error) {
