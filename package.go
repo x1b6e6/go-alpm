@@ -138,12 +138,12 @@ func (pkg *Package) Conflicts() DependList {
 }
 
 // DB returns the package's origin database.
-func (pkg *Package) DB() *Db {
+func (pkg *Package) DB() *DB {
 	ptr := C.alpm_pkg_get_db(pkg.pmpkg)
 	if ptr == nil {
 		return nil
 	}
-	return &Db{ptr, pkg.handle}
+	return &DB{ptr, pkg.handle}
 }
 
 // Depends returns the package's dependency list.
@@ -296,7 +296,7 @@ func (pkg *Package) ComputeOptionalFor() []string {
 }
 
 // NewVersion checks if there is a new version of the package in the Synced DBs.
-func (pkg *Package) NewVersion(l DbList) *Package {
+func (pkg *Package) NewVersion(l DBList) *Package {
 	ptr := C.alpm_sync_newversion(pkg.pmpkg,
 		(*C.alpm_list_t)(unsafe.Pointer(l.list)))
 	if ptr == nil {

@@ -257,8 +257,8 @@ func (question QuestionReplace) OldPkg(h *Handle) *Package {
 	}
 }
 
-func (question QuestionReplace) newDb(h *Handle) *Db {
-	return &Db{
+func (question QuestionReplace) newDB(h *Handle) *DB {
+	return &DB{
 		question.ptr.newdb,
 		*h,
 	}
