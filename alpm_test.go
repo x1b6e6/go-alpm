@@ -21,9 +21,9 @@ var h *Handle
 
 func init() {
 	var err error
-	h, err = Init("/", "/var/lib/pacman")
+	h, err = Initialize("/", "/var/lib/pacman")
 	if err != nil {
-		fmt.Printf("failed to Init(): %s", err)
+		fmt.Printf("failed to Initialize(): %s", err)
 		os.Exit(1)
 	}
 }

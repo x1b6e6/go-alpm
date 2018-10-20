@@ -66,7 +66,7 @@ func init() {
 
 // Tests package attribute getters.
 func TestPkginfo(t *testing.T) {
-	h, er := Init(root, dbpath)
+	h, er := Initialize(root, dbpath)
 	defer h.Release()
 	if er != nil {
 		t.Errorf("Failed at alpm initialization: %s", er)
