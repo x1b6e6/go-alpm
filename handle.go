@@ -144,7 +144,7 @@ func (h *Handle) AddCacheDir(hookDir string) error {
 	})
 }
 
-func (h *Handle) SetCacheDirs(hookDirs ...string) error {
+func (h *Handle) SetCacheDirs(hookDirs []string) error {
 	return h.optionSetList(hookDirs, func(handle *C.alpm_handle_t, l *C.alpm_list_t) C.int {
 		return C.alpm_option_set_cachedirs(handle, l)
 	})
@@ -168,7 +168,7 @@ func (h *Handle) AddHookDir(hookDir string) error {
 	})
 }
 
-func (h *Handle) SetHookDirs(hookDirs ...string) error {
+func (h *Handle) SetHookDirs(hookDirs []string) error {
 	return h.optionSetList(hookDirs, func(handle *C.alpm_handle_t, l *C.alpm_list_t) C.int {
 		return C.alpm_option_set_hookdirs(handle, l)
 	})
@@ -242,7 +242,7 @@ func (h *Handle) AddNoUpgrade(hookDir string) error {
 	})
 }
 
-func (h *Handle) SetNoUpgrades(hookDirs ...string) error {
+func (h *Handle) SetNoUpgrades(hookDirs []string) error {
 	return h.optionSetList(hookDirs, func(handle *C.alpm_handle_t, l *C.alpm_list_t) C.int {
 		return C.alpm_option_set_noupgrades(handle, l)
 	})
@@ -272,7 +272,7 @@ func (h *Handle) AddNoExtract(hookDir string) error {
 	})
 }
 
-func (h *Handle) SetNoExtracts(hookDirs ...string) error {
+func (h *Handle) SetNoExtracts(hookDirs []string) error {
 	return h.optionSetList(hookDirs, func(handle *C.alpm_handle_t, l *C.alpm_list_t) C.int {
 		return C.alpm_option_set_noextracts(handle, l)
 	})
@@ -302,7 +302,7 @@ func (h *Handle) AddIgnorePkg(hookDir string) error {
 	})
 }
 
-func (h *Handle) SetIgnorePkgs(hookDirs ...string) error {
+func (h *Handle) SetIgnorePkgs(hookDirs []string) error {
 	return h.optionSetList(hookDirs, func(handle *C.alpm_handle_t, l *C.alpm_list_t) C.int {
 		return C.alpm_option_set_ignorepkgs(handle, l)
 	})
@@ -326,7 +326,7 @@ func (h *Handle) AddIgnoreGroup(hookDir string) error {
 	})
 }
 
-func (h *Handle) SetIgnoreGroups(hookDirs ...string) error {
+func (h *Handle) SetIgnoreGroups(hookDirs []string) error {
 	return h.optionSetList(hookDirs, func(handle *C.alpm_handle_t, l *C.alpm_list_t) C.int {
 		return C.alpm_option_set_ignoregroups(handle, l)
 	})
@@ -370,7 +370,7 @@ func (h *Handle) AddAssumeInstalled(dep Depend) error {
 	return nil
 }
 
-func (h *Handle) SetAssumeInstalled(deps ...Depend) error {
+func (h *Handle) SetAssumeInstalled(deps []Depend) error {
 	//calling this function the first time causes alpm to set the
 	//assumeinstalled list to a list containing go allocated alpm_depend_t's
 	//this is bad because alpm might at some point tree to free them
