@@ -75,17 +75,32 @@ func TestPkginfo(t *testing.T) {
 	t.Log("Printing package information for pacman")
 	db, _ := h.LocalDB()
 
-	pkg, _ := db.Pkg("glibc")
+	pkg := db.Pkg("glibc")
 	buf := bytes.NewBuffer(nil)
 	pkginfoTemplate.Execute(buf, PrettyPackage{pkg})
 	t.Logf("%s...", buf.Bytes()[:1024])
 	t.Logf("Should ignore %t", pkg.ShouldIgnore())
 
-	pkg, _ = db.Pkg("linux")
+	pkg = db.Pkg("linux")
 	if pkg != nil {
 		buf = bytes.NewBuffer(nil)
 		pkginfoTemplate.Execute(buf, PrettyPackage{pkg})
 		t.Logf("%s...", buf.Bytes()[:1024])
 		t.Logf("Should ignore %t", pkg.ShouldIgnore())
+	}
+}
+
+func TestPkgNoExist(t *testing.T) {
+	h, er := Initialize(root, dbpath)
+	defer h.Release()
+	if er != nil {
+		t.Errorf("Failed at alpm initialization: %s", er)
+	}
+
+	db, _ := h.LocalDB()
+
+	pkg := db.Pkg("non-existing-package-fa93f4af")
+	if pkg != nil {
+		t.Errorf("pkg should be nil but got %s", pkg)
 	}
 }
