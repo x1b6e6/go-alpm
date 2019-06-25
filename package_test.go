@@ -101,6 +101,6 @@ func TestPkgNoExist(t *testing.T) {
 
 	pkg := db.Pkg("non-existing-package-fa93f4af")
 	if pkg != nil {
-		t.Errorf("pkg should be nil but got %s", pkg)
+		t.Errorf("pkg should be nil but got %v", pkg)
 	}
 }
