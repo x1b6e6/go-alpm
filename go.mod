@@ -1,3 +1,3 @@
-module github.com/jguer/go-alpm
+module github.com/Jguer/go-alpm
 
 go 1.12
