@@ -91,7 +91,7 @@ func convertFilelist(files *C.alpm_filelist_t) []File {
 	cFiles := *(*[]C.alpm_file_t)(unsafe.Pointer(&rawItems))
 
 	for i := 0; i < size; i++ {
-		if file, err := convertFile(&cFiles[i]); err != nil {
+		if file, err := convertFile(&cFiles[i]); err == nil {
 			items[i] = file
 		}
 	}

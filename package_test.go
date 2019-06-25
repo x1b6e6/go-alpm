@@ -104,3 +104,25 @@ func TestPkgNoExist(t *testing.T) {
 		t.Errorf("pkg should be nil but got %v", pkg)
 	}
 }
+
+func TestPkgFiles(t *testing.T) {
+
+	h, er := Initialize(root, dbpath)
+	defer h.Release()
+	if er != nil {
+		t.Errorf("Failed at alpm initialization: %s", er)
+	}
+
+	db, _ := h.LocalDB()
+
+	pkg := db.Pkg("glibc")
+	_, err := pkg.ContainsFile("etc/locale.gen")
+	if err != nil {
+		t.Errorf("File should not be nil but got %v", err)
+	}
+	_, err = pkg.ContainsFile("etc/does-not-exist")
+	if err == nil {
+		t.Errorf("File should be nil but got %v", err)
+	}
+
+}
