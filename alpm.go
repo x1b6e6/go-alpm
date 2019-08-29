@@ -12,7 +12,7 @@ import "C"
 
 import "unsafe"
 
-// Init initializes alpm handle
+// Initialize creates a new alpm handle
 func Initialize(root, dbpath string) (*Handle, error) {
 	cRoot := C.CString(root)
 	cDBPath := C.CString(dbpath)
@@ -27,6 +27,39 @@ func Initialize(root, dbpath string) (*Handle, error) {
 	}
 
 	return &Handle{h}, nil
+}
+
+// Reopen reopens the alpm handle at the same root and dbpath
+func (h *Handle) Reopen() error {
+	var cErr C.alpm_errno_t
+
+	root, err := h.Root()
+	if err != nil {
+		return err
+	}
+
+	dbpath, err := h.DBPath()
+	if err != nil {
+		return err
+	}
+
+	cRoot := C.CString(root)
+	cDBPath := C.CString(dbpath)
+
+	defer C.free(unsafe.Pointer(cRoot))
+	defer C.free(unsafe.Pointer(cDBPath))
+	newHandle := C.alpm_initialize(cRoot, cDBPath, &cErr)
+	if cErr != 0 {
+		return Error(cErr)
+	}
+
+	if er := C.alpm_release(h.ptr); er != 0 {
+		return Error(er)
+	}
+
+	h.ptr = newHandle
+
+	return nil
 }
 
 // Release releases the alpm handle
