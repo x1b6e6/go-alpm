@@ -12,4 +12,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1#
       - name: Run Build and tests
-        run: (curl https://www.archlinux.org/feeds/packages/all/testing/ | grep pacman) && ./testdata/ci/test.sh testdata/ci/testing.Dockerfile testing || return 0
+        run: (curl https://www.archlinux.org/feeds/packages/all/testing/ | grep pacman) && ./testdata/ci/test.sh testdata/ci/testing.Dockerfile testing || exit 0
