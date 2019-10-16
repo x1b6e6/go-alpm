@@ -1,0 +1,17 @@
+name: Build Lint Test (BLT)
+# This workflow is triggered on pushes to the repository.
+on:
+  push:
+    paths-ignore:
+    - 'examples/**'
+  pull_request:
+
+jobs:
+  build:
+    name: Build and test go-alpm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1#
+      - name: Run Build and tests
+        run: ./testdata/ci/test.sh
