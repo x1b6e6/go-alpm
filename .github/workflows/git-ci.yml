@@ -3,7 +3,7 @@ name: Build versus pacman-git
 
 on:
   schedule:
-    - cron:  '0 17 * * 5'
+    - cron: "0 17 * * 5"
   push:
     branches:
       - pacman*

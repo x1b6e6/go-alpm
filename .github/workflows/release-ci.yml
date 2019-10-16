@@ -2,8 +2,10 @@ name: Build Lint Test (BLT)
 # This workflow is triggered on pushes to the repository.
 on:
   push:
+    branches-ignore:
+      - pacman*
     paths-ignore:
-    - 'examples/**'
+      - "examples/**"
   pull_request:
 
 jobs:
