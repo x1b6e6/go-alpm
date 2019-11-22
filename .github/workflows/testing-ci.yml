@@ -2,7 +2,7 @@ name: Build versus testing
 # This workflow is triggered on pushes to the repository.
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 0 * * 0"
 
 jobs:
   build:
