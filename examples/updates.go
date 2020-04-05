@@ -8,9 +8,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/jguer/go-alpm"
+	"github.com/Jguer/go-alpm"
 	"log"
-	"os"
 )
 
 func human(size int64) string {
@@ -26,19 +25,19 @@ func human(size int64) string {
 }
 
 func upgrades(h *alpm.Handle) ([]alpm.Package, error) {
-	localDb, err := h.LocalDb()
+	localDb, err := h.LocalDB()
 	if err != nil {
 		return nil, err
 	}
 
-	syncDbs, err := h.SyncDbs()
+	syncDbs, err := h.SyncDBs()
 	if err != nil {
 		return nil, err
 	}
 
 	slice := []alpm.Package{}
 	for _, pkg := range localDb.PkgCache().Slice() {
-		newPkg := pkg.NewVersion(syncDbs)
+		newPkg := pkg.SyncNewVersion(syncDbs)
 		if newPkg != nil {
 			slice = append(slice, *newPkg)
 		}
@@ -47,21 +46,12 @@ func upgrades(h *alpm.Handle) ([]alpm.Package, error) {
 }
 
 func main() {
-
-	file, err := os.Open("/etc/pacman.conf")
-	if err != nil {
-		log.Fatalln(err)
+	h, er := alpm.Initialize("/", "/var/lib/pacman")
+	if er != nil {
+		fmt.Println(er)
+		return
 	}
-	conf, err := alpm.ParseConfig(file)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	h, err := conf.CreateHandle()
 	defer h.Release()
-	if err != nil {
-		log.Fatalln(err)
-	}
 
 	upgrades, err := upgrades(h)
 	if err != nil {

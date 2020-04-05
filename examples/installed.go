@@ -10,18 +10,18 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jguer/go-alpm"
+	"github.com/Jguer/go-alpm"
 )
 
 func main() {
 
-	h, er := alpm.Init("/", "/var/lib/pacman")
+	h, er := alpm.Initialize("/", "/var/lib/pacman")
 	if er != nil {
 		print(er, "\n")
 		os.Exit(1)
 	}
 
-	db, er := h.LocalDb()
+	db, er := h.LocalDB()
 	if er != nil {
 		fmt.Println(er)
 		os.Exit(1)

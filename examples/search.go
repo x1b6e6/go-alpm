@@ -9,20 +9,20 @@ package main
 import (
 	"fmt"
 
-	"github.com/jguer/go-alpm"
+	"github.com/Jguer/go-alpm"
 )
 
 func main() {
-	h, er := alpm.Init("/", "/var/lib/pacman")
+	h, er := alpm.Initialize("/", "/var/lib/pacman")
 	if er != nil {
 		fmt.Println(er)
 		return
 	}
 	defer h.Release()
 
-	db, _ := h.RegisterSyncDb("core", 0)
-	h.RegisterSyncDb("community", 0)
-	h.RegisterSyncDb("extra", 0)
+	db, _ := h.RegisterSyncDB("core", 0)
+	h.RegisterSyncDB("community", 0)
+	h.RegisterSyncDB("extra", 0)
 
 	for _, pkg := range db.PkgCache().Slice() {
 		fmt.Printf("%s %s\n  %s\n",
