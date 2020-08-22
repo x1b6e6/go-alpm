@@ -12,7 +12,7 @@ import (
 	"github.com/Jguer/go-alpm"
 )
 
-func main() {
+func main_() {
 	h, er := alpm.Initialize("/", "/var/lib/pacman")
 	if er != nil {
 		fmt.Println(er)

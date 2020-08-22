@@ -13,8 +13,7 @@ import (
 	"github.com/Jguer/go-alpm"
 )
 
-func main() {
-
+func find_installed() {
 	h, er := alpm.Initialize("/", "/var/lib/pacman")
 	if er != nil {
 		print(er, "\n")

@@ -53,7 +53,7 @@ func (l PackageList) ForEach(f func(Package) error) error {
 // Slice converts the PackageList to a Package Slice.
 func (l PackageList) Slice() []Package {
 	slice := []Package{}
-	l.ForEach(func(p Package) error {
+	_ = l.ForEach(func(p Package) error {
 		slice = append(slice, p)
 		return nil
 	})
@@ -86,7 +86,7 @@ func (l DependList) ForEach(f func(Depend) error) error {
 // Slice converts the DependList to a Depend Slice.
 func (l DependList) Slice() []Depend {
 	slice := []Depend{}
-	l.ForEach(func(dep Depend) error {
+	_ = l.ForEach(func(dep Depend) error {
 		slice = append(slice, dep)
 		return nil
 	})

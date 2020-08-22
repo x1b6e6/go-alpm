@@ -40,7 +40,7 @@ func (l DBList) ForEach(f func(DB) error) error {
 // Slice converst DB list to DB slice.
 func (l DBList) Slice() []DB {
 	slice := []DB{}
-	l.ForEach(func(db DB) error {
+	_ = l.ForEach(func(db DB) error {
 		slice = append(slice, db)
 		return nil
 	})
@@ -53,7 +53,7 @@ func (h *Handle) SyncDBByName(name string) (db *DB, err error) {
 	if err != nil {
 		return nil, err
 	}
-	dblist.ForEach(func(b DB) error {
+	_ = dblist.ForEach(func(b DB) error {
 		if b.Name() == name {
 			db = &b
 			return io.EOF
