@@ -11,7 +11,7 @@ import (
 
 // FindSatisfier searches a DBList for a package that satisfies depstring
 // Example "glibc>=2.12"
-func (l DBList) FindSatisfier(depstring string) (*Package, error) {
+func (l DBList) FindSatisfier(depstring string) (IPackage, error) {
 	cDepString := C.CString(depstring)
 	defer C.free(unsafe.Pointer(cDepString))
 
@@ -28,7 +28,7 @@ func (l DBList) FindSatisfier(depstring string) (*Package, error) {
 }
 
 // FindSatisfier finds a package that satisfies depstring from PkgList
-func (l PackageList) FindSatisfier(depstring string) (*Package, error) {
+func (l PackageList) FindSatisfier(depstring string) (IPackage, error) {
 	cDepString := C.CString(depstring)
 	defer C.free(unsafe.Pointer(cDepString))
 
