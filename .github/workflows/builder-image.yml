@@ -1,0 +1,23 @@
+name: Builder image
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  push:
+    paths:
+      - "Dockerfile"
+jobs:
+  build:
+    name: Push builder image to GitHub Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: jguer/go-alpm/builder
+          tags: latest
