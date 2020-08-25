@@ -66,11 +66,16 @@ type IPackage interface {
 	Version() string
 	// ComputeRequiredBy returns the names of reverse dependencies of a package
 	ComputeRequiredBy() []string
-	// ComputeOptionalFor returns the names of packages that optionally require the given package
+	// ComputeOptionalFor returns the names of packages that optionally
+	// require the given package
 	ComputeOptionalFor() []string
 	ShouldIgnore() bool
 
+	// SyncNewVersion checks if there is a new version of the
+	// package in a given DBlist.
 	SyncNewVersion(l IDBList) IPackage
+
+	Type() string
 }
 
 // IPackageList exports the alpm.PackageList symbols

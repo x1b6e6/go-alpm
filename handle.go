@@ -438,7 +438,7 @@ func (h *Handle) SetArch(str string) error {
 }
 
 // LocalDB returns the local database relative to the given handle.
-func (h *Handle) LocalDB() (*DB, error) {
+func (h *Handle) LocalDB() (IDB, error) {
 	db := C.alpm_get_localdb(h.ptr)
 	if db == nil {
 		return nil, h.LastError()
@@ -447,7 +447,7 @@ func (h *Handle) LocalDB() (*DB, error) {
 }
 
 // SyncDBs returns list of Synced DBs.
-func (h *Handle) SyncDBs() (DBList, error) {
+func (h *Handle) SyncDBs() (IDBList, error) {
 	dblist := C.alpm_get_syncdbs(h.ptr)
 	if dblist == nil {
 		return DBList{nil, *h}, h.LastError()

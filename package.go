@@ -302,3 +302,7 @@ func (pkg *Package) ShouldIgnore() bool {
 	result := C.alpm_pkg_should_ignore(pkg.handle.ptr, pkg.pmpkg)
 	return result == 1
 }
+
+func (pkg *Package) Type() string {
+	return "alpm"
+}
