@@ -11,5 +11,3 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 COPY go.mod .
 
 RUN go mod download
-
-COPY . .

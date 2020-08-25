@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Jguer/go-alpm"
+	"github.com/Jguer/go-alpm/v2"
 )
 
 func find_installed() {

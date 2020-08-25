@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Jguer/go-alpm"
+	"github.com/Jguer/go-alpm/v2"
 )
 
 func human(size int64) string {

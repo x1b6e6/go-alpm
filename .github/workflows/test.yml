@@ -20,6 +20,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Lint
-        run: /app/bin/golangci-lint
+        run: /app/bin/golangci-lint run ./...
       - name: Run Build and Tests
         run: make test
