@@ -81,11 +81,13 @@ type IPackage interface {
 // IPackageList exports the alpm.PackageList symbols
 type IPackageList interface {
 	// ForEach executes an action on each package of the PackageList.
-	ForEach(f func(IPackage) error) error
+	ForEach(func(IPackage) error) error
 	// Slice converts the PackageList to a Package Slice.
 	Slice() []IPackage
 	// SortBySize returns a PackageList sorted by size.
 	SortBySize() IPackageList
+	// FindSatisfier finds a package that satisfies depstring from PkgList
+	FindSatisfier(string) (IPackage, error)
 }
 
 // IDB is an interface type for alpm.DB
@@ -105,15 +107,18 @@ type IDB interface {
 	Pkg(name string) IPackage
 	// PkgCache returns the list of packages of the database
 	PkgCache() IPackageList
-	Search(targets []string) IPackageList
+	Search([]string) IPackageList
 }
 
 // IDBList interfaces alpm.DBList
 type IDBList interface {
 	// ForEach executes an action on each DB.
-	ForEach(f func(IDB) error) error
+	ForEach(func(IDB) error) error
 	// Slice converts DB list to DB slice.
 	Slice() []IDB
 	// PkgCachebyGroup returns a PackageList of packages belonging to a group
-	FindGroupPkgs(name string) IPackageList
+	FindGroupPkgs(string) IPackageList
+	// FindSatisfier searches a DBList for a package that satisfies depstring
+	// Example "glibc>=2.12"
+	FindSatisfier(string) (IPackage, error)
 }

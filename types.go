@@ -76,7 +76,8 @@ func convertFile(file *C.alpm_file_t) (File, error) {
 	return File{
 		Name: C.GoString(file.name),
 		Size: int64(file.size),
-		Mode: uint32(file.mode)}, nil
+		Mode: uint32(file.mode),
+	}, nil
 }
 
 func convertFilelist(files *C.alpm_filelist_t) []File {
@@ -86,7 +87,8 @@ func convertFilelist(files *C.alpm_filelist_t) []File {
 	rawItems := reflect.SliceHeader{
 		Len:  size,
 		Cap:  size,
-		Data: uintptr(unsafe.Pointer(files.files))}
+		Data: uintptr(unsafe.Pointer(files.files)),
+	}
 
 	cFiles := *(*[]C.alpm_file_t)(unsafe.Pointer(&rawItems))
 

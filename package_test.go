@@ -106,7 +106,6 @@ func TestPkgNoExist(t *testing.T) {
 }
 
 func TestPkgFiles(t *testing.T) {
-
 	h, er := Initialize(root, dbpath)
 	defer h.Release()
 	if er != nil {
@@ -124,5 +123,4 @@ func TestPkgFiles(t *testing.T) {
 	if err == nil {
 		t.Errorf("File should be nil but got %v", err)
 	}
-
 }

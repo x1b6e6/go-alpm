@@ -4,6 +4,7 @@ package alpm
 #include <alpm.h>
 */
 import "C"
+
 import (
 	"fmt"
 	"unsafe"
