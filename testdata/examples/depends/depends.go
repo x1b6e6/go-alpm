@@ -13,7 +13,7 @@ import (
 	"github.com/Jguer/go-alpm/v2"
 )
 
-func find_installed() {
+func main() {
 	h, er := alpm.Initialize("/", "/var/lib/pacman")
 	if er != nil {
 		print(er, "\n")
@@ -28,6 +28,8 @@ func find_installed() {
 
 	for _, pkg := range db.PkgCache().Slice() {
 		fmt.Printf("%s %s\n", pkg.Name(), pkg.Version())
+		fmt.Println(pkg.Depends().Slice())
+		break
 	}
 
 	if h.Release() != nil {

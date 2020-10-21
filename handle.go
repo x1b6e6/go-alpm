@@ -450,10 +450,10 @@ func (h *Handle) LocalDB() (IDB, error) {
 func (h *Handle) SyncDBs() (IDBList, error) {
 	dblist := C.alpm_get_syncdbs(h.ptr)
 	if dblist == nil {
-		return DBList{nil, *h}, h.LastError()
+		return &DBList{nil, *h}, h.LastError()
 	}
 	dblistPtr := unsafe.Pointer(dblist)
-	return DBList{(*list)(dblistPtr), *h}, nil
+	return &DBList{(*list)(dblistPtr), *h}, nil
 }
 
 func (h *Handle) CheckSpace() (bool, error) {
