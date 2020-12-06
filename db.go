@@ -154,15 +154,3 @@ func (db *DB) PkgCache() IPackageList {
 	pkgcache := (*list)(unsafe.Pointer(C.alpm_db_get_pkgcache(db.ptr)))
 	return PackageList{pkgcache, db.handle}
 }
-
-func (db *DB) Search(targets []string) IPackageList {
-	var needles *C.alpm_list_t
-
-	for _, str := range targets {
-		needles = C.alpm_list_add(needles, unsafe.Pointer(C.CString(str)))
-	}
-
-	pkglist := (*list)(unsafe.Pointer(C.alpm_db_search(db.ptr, needles)))
-	C.alpm_list_free(needles)
-	return PackageList{pkglist, db.handle}
-}

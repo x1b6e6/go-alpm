@@ -1,11 +1,12 @@
 export GO111MODULE=on
 
-GOFLAGS := -v -trimpath -mod=readonly -modcacherw
+GOFLAGS := -v -modcacherw
 EXTRA_GOFLAGS ?=
 LDFLAGS := $(LDFLAGS)
 GO ?= go
 
-SOURCES ?= $(shell find . -name "*.go" -type f ! -path "./vendor/*")
+SOURCES ?= $(shell find . -name "*.go")
+GOFLAGS += $(shell pacman -T 'pacman>6' && echo "-tags six")
 
 .PHONY: default
 default: build
@@ -23,3 +24,7 @@ test:
 .PHONY: fmt
 fmt:
 	gofmt -s -w $(SOURCES)
+
+.PHONY: clean
+clean:
+	go clean --modcache
