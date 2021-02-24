@@ -10,14 +10,23 @@ on:
 jobs:
   build:
     name: Push builder image to GitHub Packages
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v1
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: jguer/goalpm-builder
-          tags: latest
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v2
+        with:
+          platforms: linux/amd64, linux/arm/v6,linux/arm/v7,linux/arm64
+          file: Dockerfile
+          push: true
+          tags: jguer/goalpm-builder:latest
