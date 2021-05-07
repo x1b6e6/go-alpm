@@ -8,8 +8,7 @@
 package alpm
 
 /*
-#include <alpm.h>
-#include <alpm_list.h>
+#include "db_five.h"
 */
 import "C"
 
@@ -17,14 +16,21 @@ import (
 	"unsafe"
 )
 
+// Search returns a list of packages matching the targets.
+// In case of error the Package List will be nil
 func (db *DB) Search(targets []string) IPackageList {
-	var needles *C.alpm_list_t
+	var needles *C.alpm_list_t = nil
+	var ret *C.alpm_list_t = nil
 
 	for _, str := range targets {
 		needles = C.alpm_list_add(needles, unsafe.Pointer(C.CString(str)))
 	}
 
-	pkglist := (*list)(unsafe.Pointer(C.alpm_db_search(db.ptr, needles)))
+	ok := C.go_alpm_db_search(db.ptr, needles, &ret) // nolint
+	if ok != 0 {
+		return PackageList{nil, db.handle}
+	}
+
 	C.alpm_list_free(needles)
-	return PackageList{pkglist, db.handle}
+	return PackageList{(*list)(unsafe.Pointer(ret)), db.handle}
 }
