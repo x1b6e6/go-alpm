@@ -1,8 +1,13 @@
-// +build six
+// callbacks_test.go - Test sets alpm callbacks to Go functions.
+//
+// Copyright (c) 2013 The go-alpm Authors
+//
+// MIT Licensed. See LICENSE for details.
 
 package alpm
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -22,6 +27,6 @@ func TestCallbacks(t *testing.T) {
 	h.Release()
 
 	if cnt.cnt != 1 {
-		panic(nil)
+		panic(errors.New("cnt.cnt != 1"))
 	}
 }
