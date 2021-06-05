@@ -4,12 +4,10 @@
 //
 // MIT Licensed. See LICENSE for details.
 
-#if SIX
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdarg.h>
-#include "callbacks_six.h"
+#include "callbacks.h"
 
 typedef struct {
   void *go_cb;
@@ -59,4 +57,3 @@ void go_alpm_set_question_callback(alpm_handle_t *handle, void *go_cb, go_ctx_t 
   alpm_option_set_questioncb(handle, _question_cb, ctx);
 }
 
-#endif
